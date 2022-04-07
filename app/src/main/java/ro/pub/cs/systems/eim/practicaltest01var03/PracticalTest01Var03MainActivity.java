@@ -2,6 +2,7 @@ package ro.pub.cs.systems.eim.practicaltest01var03;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.util.Log;
@@ -18,6 +19,7 @@ public class PracticalTest01Var03MainActivity extends AppCompatActivity {
     private EditText firstField;
     private EditText secondField;
     private TextView result;
+    private Button nextActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,7 @@ public class PracticalTest01Var03MainActivity extends AppCompatActivity {
         this.firstField = findViewById(R.id.first_field);
         this.secondField = findViewById(R.id.second_field);
         this.result = findViewById(R.id.result);
+        this.nextActivity = findViewById(R.id.next_activity);
 
         this.plusButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,6 +83,15 @@ public class PracticalTest01Var03MainActivity extends AppCompatActivity {
                 result.setText(String.valueOf(res));
             }
         });
+
+        this.nextActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), PracticalTest01Var03SecondaryActivity.class);
+                intent.putExtra("result", result.getText().toString());
+                startActivityForResult(intent, 10);
+            }
+        });
     }
 
     @Override
@@ -100,6 +112,21 @@ public class PracticalTest01Var03MainActivity extends AppCompatActivity {
         if (savedInstanceState.containsKey("secondField")) {
             secondField.setText(savedInstanceState.getString("secondField"));
             Toast.makeText(getApplication(), savedInstanceState.getString("secondField"), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (requestCode == 10) {
+
+            if (resultCode == -1) {
+                Toast.makeText(this, "Correct", Toast.LENGTH_LONG).show();
+            }
+
+            if (resultCode == 0) {
+                Toast.makeText(this, "Incorrect", Toast.LENGTH_LONG).show();
+            }
         }
     }
 }
