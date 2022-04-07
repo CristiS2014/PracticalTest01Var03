@@ -21,7 +21,6 @@ public class ProcessingThread extends Thread{
         sendMessage1();
         sleep();
         sendMessage2();
-
     }
 
     private void sleep() {

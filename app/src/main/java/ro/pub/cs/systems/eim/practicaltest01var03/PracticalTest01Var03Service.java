@@ -18,12 +18,6 @@ public class PracticalTest01Var03Service extends Service {
         int secondNumber = intent.getIntExtra("secondValue", 0);
         processingThread = new ProcessingThread(this, firstNumber, secondNumber);
         processingThread.start();
-        Log.d("DEBUG", "StartedService" + " " + String.valueOf(firstNumber) + " " +String.valueOf(secondNumber));
-        try {
-            processingThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         return Service.START_REDELIVER_INTENT;
     }
