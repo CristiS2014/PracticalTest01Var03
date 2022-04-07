@@ -3,6 +3,7 @@ package ro.pub.cs.systems.eim.practicaltest01var03;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.Editable;
 import android.util.Log;
@@ -20,6 +21,8 @@ public class PracticalTest01Var03MainActivity extends AppCompatActivity {
     private EditText secondField;
     private TextView result;
     private Button nextActivity;
+    private BroadcastReceiverCustom broadcastReceiverCustom = new BroadcastReceiverCustom();
+    private IntentFilter intentFilter = new IntentFilter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +57,11 @@ public class PracticalTest01Var03MainActivity extends AppCompatActivity {
                 }
 
                 int res = firstNumber + secondNumber;
-                result.setText(String.valueOf(res));
+                result.setText(String.valueOf(firstNumber) + " + " + String.valueOf(secondNumber)  + " = " + String.valueOf(res));
+                Intent intent = new Intent(getApplicationContext(), PracticalTest01Var03Service.class);
+                intent.putExtra("firstValue", firstNumber);
+                intent.putExtra("secondValue", secondNumber);
+                getApplicationContext().startService(intent);
 
             }
         });
@@ -80,7 +87,11 @@ public class PracticalTest01Var03MainActivity extends AppCompatActivity {
                 }
 
                 int res = firstNumber - secondNumber;
-                result.setText(String.valueOf(res));
+                result.setText(String.valueOf(firstNumber) + " - " + String.valueOf(secondNumber)  + " = " + String.valueOf(res));
+                Intent intent = new Intent(getApplicationContext(), PracticalTest01Var03Service.class);
+                intent.putExtra("firstValue", firstNumber);
+                intent.putExtra("secondValue", secondNumber);
+                getApplicationContext().startService(intent);
             }
         });
 
@@ -92,6 +103,27 @@ public class PracticalTest01Var03MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, 10);
             }
         });
+        intentFilter.addAction("PLUS_ACTION");
+        intentFilter.addAction("MINUS_ACTION");
+    }
+
+    @Override
+    protected void onDestroy() {
+        Intent intent = new Intent(this, PracticalTest01Var03Service.class);
+        stopService(intent);
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        unregisterReceiver(broadcastReceiverCustom);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(broadcastReceiverCustom, intentFilter);
     }
 
     @Override
